@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8" />
+    <title>Chatbot HaUI</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+<header>
+    <h1>Chatbot HaUI</h1>
+    <nav>
+        <a href="{{ url_for('chat_page') }}">Chat</a>
+        <a href="{{ url_for('upload_page') }}">Upload</a>
+    </nav>
+</header>
+
+<main class="chat-container">
+    <div id="messages" class="messages"></div>
+
+    <form id="chat-form" class="chat-form">
+        <input
+            type="text"
+            id="user-input"
+            placeholder="Nhập câu hỏi của bạn về HaUI..."
+            autocomplete="off"
+        />
+        <button type="submit">Gửi</button>
+    </form>
+</main>
+
+<script>
+    const form = document.getElementById("chat-form");
+    const input = document.getElementById("user-input");
+    const messagesDiv = document.getElementById("messages");
+
+    function addMessage(text, sender) {
+        const msg = document.createElement("div");
+        msg.className = "message " + sender;
+        msg.textContent = text;
+        messagesDiv.appendChild(msg);
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    }
+
+    form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const text = input.value.trim();
+        if (!text) return;
+
+        addMessage(text, "user");
+        input.value = "";
+        addMessage("Đang trả lời...", "bot pending");
+
+        try {
+            const res = await fetch("/api/chat", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ message: text }),
+            });
+
+            // Xoá dòng "Đang trả lời..."
+            const pending = document.querySelector(".message.pending");
+            if (pending) pending.remove();
+
+            const data = await res.json();
+            if (data.reply) {
+                addMessage(data.reply, "bot");
+            } else if (data.error) {
+                addMessage("Lỗi: " + data.error, "bot");
+            } else {
+                addMessage("Có lỗi không xác định.", "bot");
+            }
+        } catch (err) {
+            const pending = document.querySelector(".message.pending");
+            if (pending) pending.remove();
+            addMessage("Lỗi kết nối tới server.", "bot");
+        }
+    });
+</script>
+</body>
+</html>
