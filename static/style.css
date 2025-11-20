@@ -1,0 +1,135 @@
+body {
+    margin: 0;
+    font-family: system-ui, sans-serif;
+    background: #f5f5f5;
+}
+
+header {
+    background: #1b4f72;
+    color: white;
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 20px;
+}
+
+nav a {
+    color: #ffe;
+    margin-left: 12px;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+nav a:hover {
+    text-decoration: underline;
+}
+
+main {
+    padding: 16px;
+}
+
+/* Chat page */
+.chat-container {
+    max-width: 800px;
+    margin: 0 auto;
+    height: calc(100vh - 80px);
+    display: flex;
+    flex-direction: column;
+}
+
+.messages {
+    flex: 1;
+    background: white;
+    border-radius: 6px;
+    padding: 12px;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+}
+
+.message {
+    padding: 8px 10px;
+    border-radius: 6px;
+    margin-bottom: 8px;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    font-size: 14px;
+}
+
+.message.user {
+    background: #d6eaf8;
+    align-self: flex-end;
+}
+
+.message.bot {
+    background: #ebf5fb;
+    align-self: flex-start;
+}
+
+.message.pending {
+    font-style: italic;
+    opacity: 0.7;
+}
+
+.chat-form {
+    display: flex;
+    margin-top: 10px;
+    gap: 8px;
+}
+
+.chat-form input[type="text"] {
+    flex: 1;
+    padding: 8px;
+    font-size: 14px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+.chat-form button {
+    padding: 8px 16px;
+    font-size: 14px;
+    border: none;
+    border-radius: 4px;
+    background: #1b4f72;
+    color: white;
+    cursor: pointer;
+}
+
+.chat-form button:hover {
+    opacity: 0.9;
+}
+
+/* Upload page */
+.upload-container {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+#upload-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#upload-form input[type="file"] {
+    padding: 6px 0;
+}
+
+#upload-form button {
+    width: fit-content;
+    padding: 8px 16px;
+    background: #1b4f72;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.upload-result {
+    margin-top: 12px;
+    font-size: 14px;
+}
