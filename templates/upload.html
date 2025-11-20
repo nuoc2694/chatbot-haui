@@ -10,10 +10,9 @@
     <h1>Quản lý tài liệu HaUI</h1>
     <nav>
         <a href="{{ url_for('chat_page') }}">Chat</a>
-        <a href="{{ url_for('upload_page') }}">Upload</a>
+        <a href="{{ url_for('logout') }}">Đăng xuất</a>
     </nav>
 </header>
-
 <main class="upload-container">
     <form id="upload-form" enctype="multipart/form-data">
         <label for="file">Chọn file PDF/DOCX/TXT quy định của trường:</label>
@@ -55,3 +54,4 @@
 </script>
 </body>
 </html>
+
