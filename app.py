@@ -3,9 +3,9 @@ import time
 import json
 import hashlib
 from datetime import datetime
-from flask import Flask, render_template, request, jsonify, redirect, url_for
+from flask import Flask, render_template, request, jsonify, redirect, url_for, session
 from dotenv import load_dotenv
-
+from functools import wraps
 from google import genai
 from google.genai import types
 
@@ -29,8 +29,18 @@ FILE_SEARCH_STORE = None
 app = Flask(__name__)
 UPLOAD_DIR = "uploads"              # Thư mục lưu file trên server
 META_FILE = "uploaded_docs.json"    # File lưu metadata các file đã upload lên File Search
-
 os.makedirs(UPLOAD_DIR, exist_ok=True)
+app.secret_key = os.getenv("FLASK_SECRET_KEY", "change_me_please")
+ADMIN_USERNAME = os.getenv("ADMIN_USERNAME", "admin")
+ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD", "password123")
+
+def login_required(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        if not session.get("logged_in"):
+            return redirect(url_for("login", next=request.path))
+        return f(*args, **kwargs)
+    return decorated
 
 # -------------------------------------------------
 # 2. Hàm tiện ích: khởi tạo File Search Store
@@ -104,10 +114,31 @@ def find_existing_file(meta_list, file_hash, file_size):
 # -------------------------------------------------
 # 3. Routes giao diện
 # -------------------------------------------------
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    error = None
+
+    if request.method == "POST":
+        username = request.form.get("username", "")
+        password = request.form.get("password", "")
+
+        if username == ADMIN_USERNAME and password == ADMIN_PASSWORD:
+            session["logged_in"] = True
+            next_url = request.args.get("next") or url_for("upload_page")
+            return redirect(next_url)
+        else:
+            error = "Sai tài khoản hoặc mật khẩu."
+
+    return render_template("login.html", error=error)
+
+@app.route("/logout")
+def logout():
+    session.clear()
+    return redirect(url_for("index"))
+
 @app.route("/")
 def index():
-    # Mặc định chuyển về trang chat
-    return redirect(url_for("chat_page"))
+    return render_template("index.html")
 
 
 @app.route("/chat")
@@ -116,6 +147,7 @@ def chat_page():
 
 
 @app.route("/upload")
+@login_required
 def upload_page():
     return render_template("upload.html")
 
@@ -170,6 +202,7 @@ def api_chat():
 # 5. API: Upload tài liệu vào File Search Store
 # -------------------------------------------------
 @app.route("/api/upload", methods=["POST"])
+@login_required
 def api_upload():
     # 1. Lấy file từ form
     if "file" not in request.files:
