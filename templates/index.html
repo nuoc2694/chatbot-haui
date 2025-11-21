@@ -2,7 +2,7 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8" />
-    <title>Hello các SV HaUI</title>
+    <title>Trợ lý ảo giải đáp thắc mắc cho sinh viên HaUI</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
     <style>
         .home-container {
@@ -53,17 +53,18 @@
 
 <main>
     <div class="home-container">
-        <div class="home-title">Hello các sv HaUI 👋😚😚😚</div>
+        <div class="home-title">Xin chào</div>
         <div class="home-subtitle">
-            Đây là trợ lý giải đáp thắc mắc cho các SV HaUI.<br/>
-            Bạn muốn gì?
+            Đây là trợ lý ảo giải đáp thắc mắc cho sinh viên HaUI<br/>
+            Bạn muốn hỏi gì?
         </div>
         <div class="home-buttons">
-            <a class="home-btn" href="{{ url_for('chat_page') }}">Vào trang Chat</a>
-            <a class="home-btn" href="{{ url_for('upload_page') }}">Vào trang Upload</a>
+            <a class="home-btn" href="{{ url_for('chat_page') }}">Bắt đầu chat</a>
+            <a class="home-btn" href="{{ url_for('upload_page') }}">Đăng nhập quản trị</a>
         </div>
     </div>
 </main>
 </body>
 </html>
+
 
